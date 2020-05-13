@@ -1,0 +1,33 @@
+ggplot(data=movies, aes(x=BudgetMillions)) +
+  geom_histogram(binwidth = 10, aes(fill=Genre),
+                 colour="Black") +
+  facet_grid(Genre~., scales="free")
+
+ggplot(data=movies, aes(x=CriticRating, y=AudienceRating,
+                        color=Genre)) +
+  geom_point(size=3) + facet_grid(.~Year, scales="free")
+
+ggplot(data=movies, aes(x=CriticRating, y=AudienceRating,
+                        color=Genre)) +
+  geom_point(aes(size=BudgetMillions)) + geom_smooth() +
+  facet_grid(Genre~Year)
+
+
+#------------Coordinates------------------
+ggplot(data=movies, aes(x=CriticRating, y=AudienceRating, 
+                        size=BudgetMillions,
+                        colour=Genre)) +
+  geom_point() + xlim(50,100) + ylim(50,100)
+
+
+#Zoom In
+ggplot(data=movies, aes(x=BudgetMillions)) +
+  geom_histogram(binwidth = 10, aes(fill = Genre), 
+                 colour = "Black") +
+  coord_cartesian(ylim = c(0, 50))
+
+ggplot(data=movies, aes(x=CriticRating, y=AudienceRating,
+                        color=Genre)) +
+  geom_point(aes(size=BudgetMillions)) + geom_smooth() +
+  facet_grid(Genre~Year) +
+  coord_cartesian(ylim = c(0,100))

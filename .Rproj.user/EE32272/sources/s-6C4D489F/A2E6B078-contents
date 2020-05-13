@@ -1,0 +1,51 @@
+library(tidyverse)
+library(ggthemes)
+library(grid)
+library(gridExtra)
+
+icmrTesting <- data.frame(read_csv("https://api.covid19india.org/csv/latest/tested_numbers_icmr_data.csv"))
+
+icmrTesting %>% select(Date = Update.Time.Stamp, CumulativeTested = Total.Samples.Tested) -> dailyTesting
+
+dailyTesting %>%
+  mutate(
+    Date = as.Date(Date, '%d/%m/%Y'),
+    CumulativeTested = as.integer(CumulativeTested),
+  ) %>%
+  filter(!is.na(CumulativeTested)) %>%
+  mutate(
+    TestingDayCount = lead(CumulativeTested, 1) - CumulativeTested
+  ) %>%
+  group_by(Date) %>%
+  summarise(TestingDayCount = sum(TestingDayCount))-> dailyTesting
+
+dailyDetectedCases %>%
+  group_by(Date) %>%
+  summarise(DailyReportedCases = sum(Cases)) -> dailyReportedCases
+
+dailyTesting %>%
+  inner_join(
+    dailyReportedCases, by = "Date"
+  ) %>%
+  filter(Date != max(Date)) %>%
+  mutate(
+    PositivityRate = round((DailyReportedCases/TestingDayCount) * 100,1)
+  ) -> dailyReportedCases
+
+dailyReportedCases %>%
+  ggplot(aes(x=Date, y=TestingDayCount, label = TestingDayCount)) +
+  geom_bar(stat = "identity", size = 0.1, fill = "#E69F00") +
+  geom_text(check_overlap = TRUE) + 
+  scale_x_date('',date_breaks = '7 days', date_labels = '%d-%m') + labs(title="Daily Samples Tested - ICMR Reporting") + xlab("Date") + ylab("Samples Tested") + theme_economist() -> testingGraph
+
+dailyReportedCases %>%
+  filter(PositivityRate != max(PositivityRate)) %>%
+  ggplot(aes(x=Date, y=PositivityRate, label = PositivityRate)) +
+  geom_point() +
+  geom_text(check_overlap = TRUE, nudge_y = 1.0) + 
+  geom_line(size = 1, color = "Black") +
+  scale_x_date('',date_breaks = '7 days', date_labels = '%d-%m') + labs(title="Daily Positivity Rate", caption="© Omkar Shukla (@shukla_omkar)\n Data source: covid19india.org") + xlab("Date") + ylab("Positivity Rate (%)") + theme_economist() -> positivityRateGraph
+
+combinedGraph <- grid.arrange(testingGraph, positivityRateGraph, nrow=2)
+
+ggsave(combinedGraph, filename = "TestsAndPositivity.png", height = 9 , width = 18, units = 'in', dpi = 500)

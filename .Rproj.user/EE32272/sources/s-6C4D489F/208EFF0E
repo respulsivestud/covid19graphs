@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589360110092.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "208EFF0E",
+    "lastKnownWriteTime" : 1588818147,
+    "last_content_update" : 1588818147,
+    "path" : "~/Covid/Covid-19/covid19-master/covidGraphsForTwitter.R",
+    "project_path" : "covid19-master/covidGraphsForTwitter.R",
+    "properties" : {
+        "cursorPosition" : "116,83",
+        "scrollLine" : "111"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

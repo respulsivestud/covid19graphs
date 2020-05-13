@@ -48,4 +48,4 @@ dailyReportedCases %>%
 
 combinedGraph <- grid.arrange(testingGraph, positivityRateGraph, nrow=2)
 
-ggsave(combinedGraph, filename = "TestsAndPositivity.png", height = 9 , width = 18, units = 'in', dpi = 500)
+ggsave(combinedGraph, filename = "TestsAndPositivity.png", height = 9 , width = 18, units = 'in', dpi = 300)
